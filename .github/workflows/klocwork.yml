@@ -34,3 +34,8 @@ jobs:
         run: kwbuildproject --url ${{secrets.KWSERVER}}/demosthenes_actions_demo -o tables kwinject.out -f
       - name: kwload
         run: kwadmin --url ${{secrets.KWSERVER}} load demosthenes_actions_demo tables
+      - name: generate sarif file
+        run: python2 ${{secrets.KWSHOME}}/klocwork/kwbuildtools/bin/kwoutput.py -a api -f sarif --url ${{secrets.KWSERVER}}/demosthenes_actions_demo
+      - uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: kw.sarif
