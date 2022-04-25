@@ -27,9 +27,6 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: checkout
         uses: actions/checkout@v2
-        with:
-          repository: msys-softverify/demosthenes
-          path: demosthenes
       # Runs a single command using the runners shell
       - name: kwinject
         run: kwinject make
