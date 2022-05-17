@@ -30,7 +30,7 @@ jobs:
           kwciagent create --url ${{secrets.KWSERVER}}/demosthenes_actions_demo -b kwinject.out
           kwciagent run -Y -L @diff_file_list.txt
           kwciagent list -Y -F scriptable --report qgate.txt @diff_file_list.txt
-          if [ $( wc -l qgate.txt ) -gt 0 ]; then exit 1; fi
+          if [ $( cat qgate.txt | wc -l ) -gt 0 ]; then exit 1; fi
       - name: generate sarif file
         if: ${{ failure() }}
         run: python2 ${{secrets.KWHOME}}/klocwork/kwciagent/bin/kwoutput.py -a kwlp -f sarif --kwlp .kwlp
