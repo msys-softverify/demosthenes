@@ -4,7 +4,13 @@ on:
   push:
     branches-ignore:
       - main
+    paths:
+      - 'revisions/**'
   pull_request:
+    branches:
+      - main
+    paths:
+      - 'revisions/**'
   workflow_dispatch:
     inputs:
       name:
@@ -26,16 +32,17 @@ jobs:
       - name: create diff list
         run: git diff --name-only HEAD^..HEAD > diff_file_list.txt
       - name: kwciagent
+        id: kwciagent
         run: |
           kwciagent create --url ${{secrets.KWSERVER}}/demosthenes_actions_demo -b kwinject.out
           kwciagent run -Y -L @diff_file_list.txt
           kwciagent list -Y -F scriptable --report qgate.txt @diff_file_list.txt
           if [ $( cat qgate.txt | wc -l ) -gt 0 ]; then exit 1; fi
       - name: generate sarif file
-        if: ${{ failure() }}
+        if: failure() && steps.kwciagent.outcome == 'failure'
         run: python2 ${{secrets.KWHOME}}/klocwork/kwciagent/bin/kwoutput.py -a kwlp -f sarif --kwlp .kwlp
       - name: upload sarif file
-        if: ${{ failure() && hashFiles('kw.sarif') != '' }}
+        if: failure() && steps.kwciagent.outcome == 'failure' && hashFiles('kw.sarif') != ''
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: kw.sarif
