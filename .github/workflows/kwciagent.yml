@@ -37,5 +37,5 @@ jobs:
       - name: upload sarif file
         if: ${{ failure() && hashFiles('kw.sarif') != '' }}
         uses: github/codeql-action/upload-sarif@v2
-          with:
-            sarif_file: kw.sarif
+        with:
+          sarif_file: kw.sarif
