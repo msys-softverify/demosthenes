@@ -1,0 +1,39 @@
+name: Klocwork diff analysis
+
+on:
+  push:
+    branches-ignore:
+      - main
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Run the Klocwork analysis manually'
+        default: 'Manual Execution'
+        required: true
+
+jobs:
+  klocwork:
+    runs-on: [self-hosted, kwciagent]
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
+      - name: kwinject
+        run: kwinject make
+      - name: create diff list
+        run: git diff --name-only HEAD^..HEAD > diff_file_list.txt
+      - name: kwciagent
+        run: |
+          kwciagent create --url ${{secrets.KWSERVER}}/demosthenes_actions_demo -b kwinject.out
+          kwciagent run -Y -L @diff_file_list.txt
+          kwciagent list -Y -F scriptable --report qgate.txt @diff_file_list.txt
+          if [ $( wc -l qgate.txt ) -gt 0 ]; then exit 1; fi
+      - name: generate sarif file
+        if: ${{ failure() }}
+        run: python2 ${{secrets.KWHOME}}/klocwork/kwciagent/bin/kwoutput.py -a kwlp -f sarif --kwlp .kwlp
+      - uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: kw.sarif

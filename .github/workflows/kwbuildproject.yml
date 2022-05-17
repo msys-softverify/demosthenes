@@ -1,0 +1,32 @@
+name: Klocwork integration build analysis
+
+on:
+  push:
+    branches:
+      -main
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Run the Klocwork analysis manually'
+        default: 'Manual Execution'
+        required: true
+  
+
+jobs:
+  klocwork:
+    runs-on: [self-hosted, kwbuildtools]
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: kwinject
+        run: kwinject make
+      - name: kwbuildproject
+        run: kwbuildproject --url ${{secrets.KWSERVER}}/demosthenes_actions_demo -o tables kwinject.out -f
+      - name: kwload
+        run: kwadmin --url ${{secrets.KWSERVER}} load demosthenes_actions_demo tables
+      - name: generate sarif file
+        run: python2 ${{secrets.KWHOME}}/klocwork/kwbuildtools/bin/kwoutput.py -a api -f sarif --url ${{secrets.KWSERVER}}/demosthenes_actions_demo
+      - uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: kw.sarif
