@@ -1,0 +1,25 @@
+name: Klocwork Integration Analysis
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Run manually'
+        default: 'Manual Execution'
+        required: true
+
+jobs:
+  build:
+
+    runs-on: self-hosted
+
+    steps:
+    - uses: actions/checkout@v3
+    - id: kw-analysis
+      uses: michael-baron/klocwork-integration-analysis-action@v03
+      with:
+        build-command: make
+        url: ${{secrets.KWSERVER}}
+        project: demosthenes_actions_demo
