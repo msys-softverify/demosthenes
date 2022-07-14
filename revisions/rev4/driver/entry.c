@@ -8,8 +8,8 @@ char* foo()
 void bar()
 {
     char *p = foo();
-    if(p != NULL) { return; }
-    p[0] = 0;
+    if(p == NULL) { return; }
+    if(p != NULL) { p[0] = 0; }
 }
 
 int main() {
