@@ -40,7 +40,7 @@ jobs:
           if [ $( cat qgate.txt | wc -l ) -gt 0 ]; then exit 1; fi
       - name: generate sarif file
         if: failure() && steps.kwciagent.outcome == 'failure'
-        run: python2 ${{secrets.KWHOME}}/klocwork/kwciagent/bin/kwoutput.py -a kwlp -f sarif --kwlp .kwlp
+        run: python2 ${{secrets.KWHOME}}/klocwork/kwoutput.py -a kwlp -f sarif --kwlp .kwlp
       - name: upload sarif file
         if: failure() && steps.kwciagent.outcome == 'failure' && hashFiles('kw.sarif') != ''
         uses: github/codeql-action/upload-sarif@v2
