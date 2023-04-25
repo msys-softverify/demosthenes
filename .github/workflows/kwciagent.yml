@@ -44,10 +44,10 @@ jobs:
           kwciagent list -Y -F scriptable --report qgate.txt @diff_file_list.txt
           if [ $( cat qgate.txt | wc -l ) -gt 0 ]; then exit 1; fi
       - name: generate sarif file
-        if: ${{failure() && steps.kwciagent.outcome == 'failure'}}
+        if: failure() && steps.kwciagent.outcome == 'failure'
         run: python2 ${{secrets.KWHOME}}/klocwork/kwoutput.py -a kwlp -f sarif --kwlp .kwlp
       - name: upload sarif file
-        if: ${{hashFiles('kw.sarif') != ''}}
+        if: hashFiles('${{github.ref_name}}/kw.sarif') != ''
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: kw.sarif
