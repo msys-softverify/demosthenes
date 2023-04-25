@@ -49,7 +49,7 @@ jobs:
       - name: test upload sarif file
         if: failure() && steps.kwciagent.outcome == 'failure'
         run: |
-          echo ${{GITHUB_WORKSPACE}}
+          echo $GITHUB_WORKSPACE
           echo ${{hashFiles('github.ref_name/kw.sarif')}}
           echo ${{hashFiles('**/github.ref_name/kw.sarif')}}
           echo ${{hashFiles('featureM/kw.sarif')}}
