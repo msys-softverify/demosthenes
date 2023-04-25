@@ -17,5 +17,6 @@ int bar() {
 }
 
 int main() {
+    int a;
     return 0;
 }
