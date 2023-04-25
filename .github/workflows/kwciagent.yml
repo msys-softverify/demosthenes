@@ -49,12 +49,8 @@ jobs:
       - name: test upload sarif file
         if: failure() && steps.kwciagent.outcome == 'failure'
         run: |
-          echo $GITHUB_WORKSPACE
-          echo ${{hashFiles('github.ref_name/kw.sarif')}}
-          echo ${{hashFiles('**/github.ref_name/kw.sarif')}}
+          echo ${{hashFiles('${{github.ref_name}}/kw.sarif')}}
           echo ${{hashFiles('featureM/kw.sarif')}}
-          echo ${{hashFiles('**/featureM/kw.sarif')}}
-          echo ${{hashFiles('kw.sarif')}}
       - name: upload sarif file
         if: hashFiles('${{github.ref_name}}/kw.sarif') != ''
         uses: github/codeql-action/upload-sarif@v2
