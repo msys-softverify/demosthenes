@@ -48,7 +48,7 @@ jobs:
         if: ${{steps.kwciagent.outcome == 'failure'}}
         run: python2 ${{secrets.KWHOME}}/klocwork/kwoutput.py -a kwlp -f sarif --kwlp .kwlp
       - name: upload sarif file
-        if: ${{steps.kwciagent.conclusion == 'failure' && hashFiles('kw.sarif') != ''}}
+        if: ${{steps.kwciagent.outcome == 'failure' && hashFiles('kw.sarif') != ''}}
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: kw.sarif
