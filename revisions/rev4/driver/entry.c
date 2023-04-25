@@ -1,22 +1,16 @@
-#import <stdlib.h>
-
-int *foo(int n) {
-    int *ptr = malloc(sizeof(int));
-    if(!ptr) {
-        return NULL;
-    }
-    *ptr = n;
-    
-    return ptr;
-}
-
-int bar() {
-    int *p = foo(10);
-    if (p != NULL) {}
-    p[0] = 0;
+int foo() {
+    int a;
+    int b;
+    return a + b;
 }
 
 int main() {
-    int a;
-    return 0;
+    int a[] = {1,2,3,4,5};
+    int ret = 0;
+    int i;
+    for(i=0; i<sizeof(a)/sizeof(int); i++)
+    {
+        ret = ret + a[i];
+    }
+    return ret;
 }
