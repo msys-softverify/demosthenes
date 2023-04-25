@@ -18,10 +18,17 @@ jobs:
 
     steps:
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: kwinject
         run: kwinject make
       - name: kwbuildproject
         run: kwbuildproject --url ${{secrets.KWSERVER}}/demosthenes_actions_demo -o tables kwinject.out -f
       - name: kwload
         run: kwadmin --url ${{secrets.KWSERVER}} load demosthenes_actions_demo tables
+      - name: generate sarif file
+        run: python2 ${{secrets.KWHOME}}/klocwork/kwoutput.py -a api -f sarif --url ${{secrets.KWSERVER}}/demosthenes_actions_demo
+      - name: upload sarif file
+        if: hashFiles('kw.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: kw.sarif
