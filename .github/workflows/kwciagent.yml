@@ -17,20 +17,22 @@ on:
         description: 'Run the Klocwork analysis manually'
         default: 'Manual Execution'
         required: true
+env:
+  workdir: ${{github.ref_name}}
 
 jobs:
   klocwork:
     runs-on: [self-hosted, kwciagent]
     defaults:
       run:
-        working-directory: ${{github.ref_name}}
+        working-directory: ${{env.workdir}}
 
     steps:
       - name: checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 2
-          path: ${{github.ref_name}}
+          path: ${{env.workdir}}
       - name: kwinject
         run: kwinject make
       - name: create diff list
@@ -49,8 +51,7 @@ jobs:
       - name: test upload sarif file
         if: failure() && steps.kwciagent.outcome == 'failure'
         run: |
-          SARIF_FILE = ${{github.ref_name}}/kw.sarif
-          echo ${{hashFiles($SARIF_FILE)}}
+          echo ${{hashFiles(env.workdir)}}
           echo ${{hashFiles('featureM/kw.sarif')}}
       - name: upload sarif file
         if: hashFiles('${{github.ref_name}}/kw.sarif') != ''
