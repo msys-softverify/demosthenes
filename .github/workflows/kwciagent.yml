@@ -47,6 +47,7 @@ jobs:
         if: failure() && steps.kwciagent.outcome == 'failure'
         run: python2 ${{secrets.KWHOME}}/klocwork/kwoutput.py -a kwlp -f sarif --kwlp .kwlp
       - name: test upload sarif file
+        if: failure() && steps.kwciagent.outcome == 'failure'
         run: |
           echo hashFiles('${{github.ref_name}}/kw.sarif')
           echo hashFiles('kw.sarif')
