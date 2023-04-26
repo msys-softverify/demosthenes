@@ -17,23 +17,16 @@ on:
         description: 'Run the Klocwork analysis manually'
         default: 'Manual Execution'
         required: true
-env:
-  workdir: ${{github.ref_name}}
-  sarif_file: ${{github.ref_name}}/kw.sarif
 
 jobs:
   klocwork:
     runs-on: [self-hosted, kwciagent]
-    defaults:
-      run:
-        working-directory: ${{env.workdir}}
 
     steps:
       - name: checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
         with:
           fetch-depth: 2
-          path: ${{env.workdir}}
       - name: kwinject
         run: kwinject make
       - name: create diff list
@@ -41,19 +34,15 @@ jobs:
       - name: kwciagent
         id: kwciagent
         run: |
-          export LC_ALL=ja_JP.utf8
           kwciagent create --url ${{secrets.KWSERVER}}/demosthenes_actions_demo -b kwinject.out
-          kwciagent run -Y --ci-build ${{ github.ref_name }}_${{ github.sha }} -L @diff_file_list.txt
+          kwciagent run -Y -L @diff_file_list.txt
           kwciagent list -Y -F scriptable --report qgate.txt @diff_file_list.txt
           if [ $( cat qgate.txt | wc -l ) -gt 0 ]; then exit 1; fi
       - name: generate sarif file
         if: failure() && steps.kwciagent.outcome == 'failure'
-        run: python2 ${{secrets.KWHOME}}/klocwork/kwoutput.py -a kwlp -f sarif --kwlp .kwlp
-      - name: edit sarif file
-        if: failure() && steps.kwciagent.outcome == 'failure' && hashFiles(env.sarif_file) != ''
-        run: sed -i -e 's#${{github.ref_name}}/revisions#revisions#g' ./kw.sarif
+        run: python2 ${{secrets.KWHOME}}/klocwork/kwciagent/bin/kwoutput.py -a kwlp -f sarif --kwlp .kwlp
       - name: upload sarif file
-        if: failure() && steps.kwciagent.outcome == 'failure' && hashFiles(env.sarif_file) != ''
+        if: failure() && steps.kwciagent.outcome == 'failure' && hashFiles('kw.sarif') != ''
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: ${{env.sarif_file}}
+          sarif_file: kw.sarif
