@@ -3,6 +3,11 @@ int foo() {
     int b;
     return a + b;
 }
+int bar() {
+    int c;
+    int d;
+    return a * d;
+}
 
 int main() {
     int a[] = {1,2,3,4,5};
