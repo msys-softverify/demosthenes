@@ -4,9 +4,14 @@ int foo() {
     return a + b;
 }
 int bar() {
-    int c;
-    int d;
-    return c * d;
+    int c[] = {1, 2, 3};
+    int i;
+    int ret;
+    for(i<0; i<sizeof(c); i++)
+    {
+        ret = ret + c[i];
+    }
+    return ret;
 }
 int hoge() {
     int e;
