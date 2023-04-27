@@ -14,9 +14,14 @@ int bar() {
     return ret;
 }
 int hoge() {
-    int e;
-    int f;
-    return e - f;
+    int d[] = {1, 2, 3};
+    int i;
+    int ret;
+    for(i<0; i<sizeof(d); i++)
+    {
+        ret = ret + d[i];
+    }
+    return ret;
 }
 
 int main() {
