@@ -8,6 +8,11 @@ int bar() {
     int d;
     return a * d;
 }
+int hoge() {
+    int e;
+    int f;
+    return e - f;
+}
 
 int main() {
     int a[] = {1,2,3,4,5};
