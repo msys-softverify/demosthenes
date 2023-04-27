@@ -11,6 +11,7 @@ filetype_t get_file_type(const char* filename, size_t header_size) {
     size_t n_read;
 
     fp = fopen(filename, "r");
+    n_read = fread(buf, header_size, 1, fp);
     if (fp == NULL || header_size<4) {
         /* trying to handle abnormal situation function does not
            deallocate grabbed memory */
@@ -18,7 +19,7 @@ filetype_t get_file_type(const char* filename, size_t header_size) {
     }
     /* malloc may fail to allocate memory and return 0, in that case
        we gate null pointer dereference in fread */
-    n_read = fread(buf, header_size, 1, fp);
+    
     if (n_read < 4) {
         fclose(fp); 
         /* Here we fail to deallocate 'buf' once again */
