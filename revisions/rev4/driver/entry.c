@@ -6,6 +6,9 @@ int foo() {
     {
         ret = ret + a[i];
     }
+    int x;
+    int y;
+    ret = ret + x * y;
     return ret;
 }
 
