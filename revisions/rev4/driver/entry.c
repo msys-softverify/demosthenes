@@ -6,7 +6,7 @@ int foo() {
 int bar() {
     int c;
     int d;
-    return a * d;
+    return c * d;
 }
 int hoge() {
     int e;
