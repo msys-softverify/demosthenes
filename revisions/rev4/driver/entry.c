@@ -4,13 +4,17 @@ int foo() {
     return a + b;
 }
 
-int main() {
+int bar() {
     int a[] = {1,2,3,4,5};
     int ret = 0;
     int i;
-    for(i=0; i<sizeof(a)/sizeof(int); i++)
+    for(i=0; i<sizeof(a) i++)
     {
         ret = ret + a[i];
     }
     return ret;
+}
+
+int main() {
+    return 0;
 }
