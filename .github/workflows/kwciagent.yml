@@ -18,7 +18,7 @@ on:
         default: 'Manual Execution'
         required: true
 env:
-  sarif_file: ${{github.ref_name}}/kw.sarif
+  sarif_file: kw.sarif
 
 jobs:
   klocwork:
