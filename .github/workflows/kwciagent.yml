@@ -18,22 +18,17 @@ on:
         default: 'Manual Execution'
         required: true
 env:
-  workdir: ${{github.ref_name}}
   sarif_file: ${{github.ref_name}}/kw.sarif
 
 jobs:
   klocwork:
     runs-on: [self-hosted, kwciagent]
-    defaults:
-      run:
-        working-directory: ${{env.workdir}}
 
     steps:
       - name: checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 2
-          path: ${{env.workdir}}
       - name: kwinject
         run: kwinject make
       - name: create diff list
