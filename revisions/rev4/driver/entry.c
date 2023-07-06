@@ -7,7 +7,9 @@ int foo() {
 int bar() {
     int c;
     int d;
-    return c * d;
+    int e;
+    int f;
+    return c * d + e - f;
 }
 
 int main() {
