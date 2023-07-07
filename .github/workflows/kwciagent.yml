@@ -43,8 +43,8 @@ jobs:
         run: |
           export LC_ALL=ja_JP.utf8
           kwciagent create --url ${{secrets.KWSERVER}}/demosthenes_actions_demo -b kwinject.out
-          kwciagent run -Y --ci-build ${{ github.ref_name }}_${{ github.sha }} -L @diff_file_list.txt
-          kwciagent list -Y -F scriptable --report qgate.txt @diff_file_list.txt
+          kwciagent run -Y --ci-build ${{ github.ref_name }}_${{ github.sha }}
+          kwciagent list -Y -F scriptable --report qgate.txt
           if [ $( cat qgate.txt | wc -l ) -gt 0 ]; then exit 1; fi
       - name: generate sarif file
         if: failure() && steps.kwciagent.outcome == 'failure'
