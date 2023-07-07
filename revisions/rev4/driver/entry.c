@@ -16,5 +16,6 @@ int bar() {
 }
 
 int main() {
+    // dummy comment
     return 0;
 }
